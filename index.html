@@ -20,6 +20,7 @@
       --bar-gradient: linear-gradient(90deg, #4facfe 0%, #00ffcc 100%);
       --error: #ff6b6b;
       --success: #00ffcc;
+      --warn: #ffd166;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -92,7 +93,7 @@
     }
 
     /* ── Input ── */
-    .input-group { display: flex; gap: 12px; margin-bottom: 32px; }
+    .input-group { display: flex; gap: 12px; margin-bottom: 16px; }
 
     input#skills {
       flex: 1;
@@ -137,6 +138,115 @@
     }
 
     button#analyzeBtn:active { transform: translateY(0); }
+
+    /* ── Skills Browser ── */
+    .skills-browser {
+      margin-bottom: 28px;
+    }
+
+    .skills-toggle {
+      background: none;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .skills-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .skills-toggle .arrow {
+      transition: transform 0.3s ease;
+      font-size: 0.7rem;
+    }
+
+    .skills-toggle.open .arrow {
+      transform: rotate(180deg);
+    }
+
+    .skills-list {
+      display: none;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    .skills-list.open {
+      display: flex;
+    }
+
+    .skills-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .skills-list::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.15);
+      border-radius: 3px;
+    }
+
+    .skill-chip {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(79, 172, 254, 0.1);
+      border: 1px solid rgba(79, 172, 254, 0.2);
+      border-radius: 8px;
+      font-size: 0.78rem;
+      color: #8ec5fc;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .skill-chip:hover {
+      background: rgba(79, 172, 254, 0.25);
+      border-color: rgba(79, 172, 254, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .skill-chip.selected {
+      background: rgba(0, 255, 204, 0.2);
+      border-color: rgba(0, 255, 204, 0.4);
+      color: var(--accent);
+    }
+
+    /* ── Did You Mean ── */
+    .did-you-mean {
+      background: rgba(255, 209, 102, 0.08);
+      border: 1px solid rgba(255, 209, 102, 0.2);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      color: var(--warn);
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .did-you-mean strong { color: #ffe08a; }
+
+    .suggestion-link {
+      color: var(--accent);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.2s;
+    }
+
+    .suggestion-link:hover { color: var(--accent-hover); }
 
     /* ── Results ── */
     .result-card {
@@ -283,12 +393,26 @@
     }
     .learn-btn.youtube:hover { background: rgba(255, 0, 0, 0.25); }
 
-    .learn-btn.udemy {
+    .learn-btn.edx {
       background: rgba(164, 53, 240, 0.12);
       border: 1px solid rgba(164, 53, 240, 0.25);
       color: #c98bff;
     }
-    .learn-btn.udemy:hover { background: rgba(164, 53, 240, 0.25); }
+    .learn-btn.edx:hover { background: rgba(164, 53, 240, 0.25); }
+
+    .learn-btn.khan {
+      background: rgba(20, 191, 150, 0.12);
+      border: 1px solid rgba(20, 191, 150, 0.25);
+      color: #5ce0b8;
+    }
+    .learn-btn.khan:hover { background: rgba(20, 191, 150, 0.25); }
+
+    .learn-btn.freecodecamp {
+      background: rgba(10, 10, 35, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #99e6cc;
+    }
+    .learn-btn.freecodecamp:hover { background: rgba(10, 10, 35, 0.5); }
 
     .learn-btn.google {
       background: rgba(0, 255, 204, 0.08);
@@ -324,9 +448,7 @@
       animation: fadeIn 0.8s ease-out 0.4s backwards;
     }
 
-    .stat {
-      text-align: center;
-    }
+    .stat { text-align: center; }
 
     .stat-number {
       font-size: 2rem;
@@ -348,11 +470,32 @@
     footer {
       margin-top: 48px;
       text-align: center;
-      color: rgba(255,255,255,0.25);
-      font-size: 0.85rem;
+      max-width: 500px;
     }
 
-    footer a {
+    .footer-group {
+      font-size: 1.1rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--accent), #4facfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .footer-names {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .footer-bottom {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .footer-bottom a {
       color: var(--accent);
       text-decoration: none;
     }
@@ -396,11 +539,26 @@
       <input id="skills" type="text" placeholder="e.g. Python, SQL, Excel, Communication" autocomplete="off" />
       <button id="analyzeBtn" onclick="analyze()">Analyze</button>
     </div>
+
+    <div class="skills-browser">
+      <button class="skills-toggle" onclick="toggleSkills()">
+        📋 Browse available skills <span class="arrow">▼</span>
+      </button>
+      <div class="skills-list" id="skillsList"></div>
+    </div>
+
+    <div id="suggestions"></div>
     <div id="results"></div>
   </div>
 
   <footer>
-    Built with conviction at the Hackathon &middot; <a href="https://github.com/jedidiahduku/SkillsGapAnalyzer" target="_blank">View on GitHub</a>
+    <div class="footer-group">Team Innovators</div>
+    <div class="footer-names">
+      Prince Sugar &middot; Chrysler Steve &middot; Jedidiah Duku
+    </div>
+    <div class="footer-bottom">
+      Built with conviction at the Hackathon &middot; <a href="https://github.com/jedidiahduku/SkillsGapAnalyzer" target="_blank">View on GitHub</a>
+    </div>
   </footer>
 
 <script>
@@ -511,6 +669,113 @@ const jobs = {
 };
 
 // ══════════════════════════════════════════════════════════════
+//  Build skill lookup (case-insensitive)
+// ══════════════════════════════════════════════════════════════
+const allSkillsSet = new Set();
+Object.values(jobs).forEach(s => s.forEach(sk => allSkillsSet.add(sk)));
+const allSkillsArray = [...allSkillsSet].sort();
+
+// Map lowercase → original casing for case-insensitive lookup
+const skillLookup = {};
+allSkillsArray.forEach(s => { skillLookup[s.toLowerCase()] = s; });
+
+// ══════════════════════════════════════════════════════════════
+//  Fuzzy Matching — find closest skill for typos
+// ══════════════════════════════════════════════════════════════
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i-1] === b[j-1]
+        ? dp[i-1][j-1]
+        : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+    }
+  }
+  return dp[m][n];
+}
+
+function findClosestSkill(input) {
+  const lower = input.toLowerCase();
+  let bestMatch = null;
+  let bestDist = Infinity;
+
+  for (const skill of allSkillsArray) {
+    const skillLower = skill.toLowerCase();
+
+    // Exact match (case-insensitive)
+    if (skillLower === lower) return { match: skill, distance: 0, type: 'exact' };
+
+    // Substring match (user typed part of a skill name)
+    if (skillLower.includes(lower) || lower.includes(skillLower)) {
+      return { match: skill, distance: 0.5, type: 'partial' };
+    }
+
+    // Levenshtein distance for typos
+    const dist = levenshtein(lower, skillLower);
+    if (dist < bestDist) {
+      bestDist = dist;
+      bestMatch = skill;
+    }
+  }
+
+  // Only suggest if the distance is reasonable (max 3 edits or 40% of the word length)
+  const threshold = Math.max(3, Math.floor(input.length * 0.4));
+  if (bestDist <= threshold) {
+    return { match: bestMatch, distance: bestDist, type: 'fuzzy' };
+  }
+  return null;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  Skills Browser
+// ══════════════════════════════════════════════════════════════
+function toggleSkills() {
+  const list = document.getElementById('skillsList');
+  const btn = document.querySelector('.skills-toggle');
+  list.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function addSkillToInput(skill) {
+  const input = document.getElementById('skills');
+  const current = input.value.split(',').map(s => s.trim()).filter(Boolean);
+  // Don't add duplicates (case-insensitive)
+  if (!current.some(s => s.toLowerCase() === skill.toLowerCase())) {
+    current.push(skill);
+    input.value = current.join(', ');
+  }
+  // Highlight the chip
+  document.querySelectorAll('.skill-chip').forEach(chip => {
+    if (chip.textContent === skill) chip.classList.toggle('selected');
+  });
+}
+
+// Populate skills browser
+window.addEventListener('DOMContentLoaded', () => {
+  const list = document.getElementById('skillsList');
+  allSkillsArray.forEach(skill => {
+    const chip = document.createElement('span');
+    chip.className = 'skill-chip';
+    chip.textContent = skill;
+    chip.onclick = () => addSkillToInput(skill);
+    list.appendChild(chip);
+  });
+
+  // Animate stats
+  animateCount(document.getElementById('roleCount'), Object.keys(jobs).length);
+  animateCount(document.getElementById('skillCount'), allSkillsSet.size);
+  animateCount(document.getElementById('sectorCount'), 15);
+
+  // Enter key
+  document.getElementById('skills').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') analyze();
+  });
+});
+
+// ══════════════════════════════════════════════════════════════
 //  Stats Counter Animation
 // ══════════════════════════════════════════════════════════════
 function animateCount(el, target, duration = 1200) {
@@ -524,41 +789,73 @@ function animateCount(el, target, duration = 1200) {
   requestAnimationFrame(step);
 }
 
-const allSkills = new Set();
-Object.values(jobs).forEach(s => s.forEach(sk => allSkills.add(sk)));
-
-window.addEventListener('DOMContentLoaded', () => {
-  animateCount(document.getElementById('roleCount'), Object.keys(jobs).length);
-  animateCount(document.getElementById('skillCount'), allSkills.size);
-  animateCount(document.getElementById('sectorCount'), 15);
-});
-
 // ══════════════════════════════════════════════════════════════
-//  Analysis Engine (runs 100% in the browser)
+//  Analysis Engine (case-insensitive + fuzzy matching)
 // ══════════════════════════════════════════════════════════════
 function analyze() {
   const raw = document.getElementById('skills').value;
   const resultsDiv = document.getElementById('results');
+  const suggestionsDiv = document.getElementById('suggestions');
 
   if (!raw.trim()) {
     resultsDiv.innerHTML = '<p class="message error">Please enter at least one skill to get started.</p>';
+    suggestionsDiv.innerHTML = '';
     return;
   }
 
-  const userSkills = new Set(
-    raw.split(',').map(s => s.trim()).filter(Boolean)
-  );
+  const rawSkills = raw.split(',').map(s => s.trim()).filter(Boolean);
+
+  // Resolve each user skill: case-insensitive + fuzzy
+  const resolvedSkills = new Set();
+  const corrections = [];     // { original, corrected, type }
+  const unrecognized = [];
+
+  rawSkills.forEach(input => {
+    const lower = input.toLowerCase();
+
+    // 1. Exact case-insensitive match
+    if (skillLookup[lower]) {
+      resolvedSkills.add(skillLookup[lower]);
+      return;
+    }
+
+    // 2. Fuzzy match
+    const closest = findClosestSkill(input);
+    if (closest && closest.distance <= 3) {
+      resolvedSkills.add(closest.match);
+      if (closest.type !== 'exact') {
+        corrections.push({ original: input, corrected: closest.match, type: closest.type });
+      }
+    } else {
+      unrecognized.push(input);
+    }
+  });
+
+  // Show "Did you mean?" suggestions
+  let sugHTML = '';
+  if (corrections.length > 0) {
+    sugHTML += '<div class="did-you-mean">💡 <strong>Auto-corrected:</strong> ';
+    sugHTML += corrections.map(c =>
+      `"${c.original}" → <span class="suggestion-link" onclick="applySuggestion('${c.original}','${c.corrected}')">${c.corrected}</span>`
+    ).join(', ');
+    sugHTML += '</div>';
+  }
+  if (unrecognized.length > 0) {
+    sugHTML += '<div class="did-you-mean">⚠️ <strong>Not recognized:</strong> ' +
+      unrecognized.join(', ') +
+      ' — Try browsing available skills above.</div>';
+  }
+  suggestionsDiv.innerHTML = sugHTML;
 
   resultsDiv.innerHTML = '<p class="message loading">Analyzing against ' + Object.keys(jobs).length + ' career roles…</p>';
 
-  // Small delay for the loading animation to feel intentional
   setTimeout(() => {
     const results = [];
 
     for (const [role, required] of Object.entries(jobs)) {
       const requiredSet = new Set(required);
-      const matched = [...requiredSet].filter(s => userSkills.has(s));
-      const gap = [...requiredSet].filter(s => !userSkills.has(s));
+      const matched = [...requiredSet].filter(s => resolvedSkills.has(s));
+      const gap = [...requiredSet].filter(s => !resolvedSkills.has(s));
       const matchScore = Math.round((matched.length / requiredSet.size) * 100);
 
       results.push({ role, match: matchScore, gap: gap.sort() });
@@ -576,17 +873,18 @@ function analyze() {
           }).join('')}</div>`
         : `<div class="gap-label no-gap">✓ You meet all core requirements!</div>`;
 
-      // Build learn links for missing skills
       let learnHTML = '';
       if (item.gap.length) {
         const searchQuery = encodeURIComponent(item.gap.join(' ') + ' skills course');
         const roleQuery = encodeURIComponent(item.role + ' skills');
         learnHTML = `
         <div class="learn-links">
-          <span class="learn-label">📚 Learn these:</span>
+          <span class="learn-label">📚 Learn free:</span>
           <a class="learn-btn coursera" href="https://www.coursera.org/search?query=${roleQuery}" target="_blank" rel="noopener">Coursera</a>
           <a class="learn-btn youtube" href="https://www.youtube.com/results?search_query=${searchQuery}" target="_blank" rel="noopener">YouTube</a>
-          <a class="learn-btn udemy" href="https://www.udemy.com/courses/search/?q=${roleQuery}" target="_blank" rel="noopener">Udemy</a>
+          <a class="learn-btn edx" href="https://www.edx.org/search?q=${roleQuery}" target="_blank" rel="noopener">edX</a>
+          <a class="learn-btn khan" href="https://www.khanacademy.org/search?search_again=1&page_search_query=${roleQuery}" target="_blank" rel="noopener">Khan Academy</a>
+          <a class="learn-btn freecodecamp" href="https://www.freecodecamp.org/news/search/?query=${roleQuery}" target="_blank" rel="noopener">freeCodeCamp</a>
           <a class="learn-btn google" href="https://www.google.com/search?q=free+${searchQuery}" target="_blank" rel="noopener">Google</a>
         </div>`;
       }
@@ -610,7 +908,6 @@ function analyze() {
 
     resultsDiv.innerHTML = html || '<p class="message">No matching roles found.</p>';
 
-    // Animate bars after DOM paint
     requestAnimationFrame(() => {
       top5.forEach((item, i) => {
         const bar = document.getElementById('bar-' + i);
@@ -620,12 +917,14 @@ function analyze() {
   }, 400);
 }
 
-// Enter key support
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('skills').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') analyze();
-  });
-});
+function applySuggestion(original, corrected) {
+  const input = document.getElementById('skills');
+  const skills = input.value.split(',').map(s => s.trim());
+  const idx = skills.findIndex(s => s.toLowerCase() === original.toLowerCase());
+  if (idx !== -1) skills[idx] = corrected;
+  input.value = skills.join(', ');
+  analyze();
+}
 </script>
 </body>
 </html>
