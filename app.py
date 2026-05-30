@@ -140,5 +140,39 @@ def analyze():
     results.sort(key=lambda x: x['match'], reverse=True)
     return jsonify(results[:5])  # Return top 5 matches
 
+
+@app.route('/jobs', methods=['GET'])
+def list_jobs():
+    """Return every role and its required skills (powers the job explorer)."""
+    return jsonify(jobs)
+
+
+@app.route('/job', methods=['GET'])
+def job_skills():
+    """Reverse lookup: given a job title, return the skills it needs.
+
+    Search the job you WANT to do and find its skills.
+    Usage: /job?role=Nurse  (case-insensitive, partial match supported)
+    """
+    query = request.args.get('role', '').strip().lower()
+    if not query:
+        return jsonify({"error": "Provide a role, e.g. /job?role=Data Analyst"}), 400
+
+    # Exact (case-insensitive) match first
+    for role, skills in jobs.items():
+        if role.lower() == query:
+            return jsonify({"role": role, "skills": skills})
+
+    # Fall back to partial matches so "engineer" or "nurse" still work
+    matches = [
+        {"role": role, "skills": skills}
+        for role, skills in jobs.items()
+        if query in role.lower()
+    ]
+    if not matches:
+        return jsonify({"error": f"No job found matching '{query}'", "matches": []}), 404
+    return jsonify({"matches": matches})
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)  # port 5001 to avoid macOS AirPlay on 5000
