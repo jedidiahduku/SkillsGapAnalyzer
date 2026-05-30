@@ -2,6 +2,14 @@
 
 > Two ways in: enter the skills you **have** to find your best-matching career roles — or search a job you **want** and see exactly which skills it needs. Every missing skill comes with a free course link.
 
+<p align="center">
+  <a href="https://jedidiahduku.github.io/SkillsGapAnalyzer/">
+    <img src="infographic.png" alt="Skills Gap Analyzer infographic" width="640">
+  </a>
+</p>
+
+> 🖼️ The infographic above is also a standalone page — open [`infographic.html`](infographic.html) in a browser.
+
 Built at a hackathon by **The Avengers** under *Track 3: Economic Empowerment & Education*.
 
 **🔗 Live demo:** https://jedidiahduku.github.io/SkillsGapAnalyzer/
