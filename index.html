@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Skills Gap Analyzer — Discover your best-matching career roles and identify exactly what skills you need to learn next.">
+  <title>Skills Gap Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --card-hover: rgba(255, 255, 255, 0.08);
+      --text-main: #ffffff;
+      --text-muted: #b0c4de;
+      --accent: #00ffcc;
+      --accent-hover: #00e6b8;
+      --accent-glow: rgba(0, 255, 204, 0.2);
+      --bar-gradient: linear-gradient(90deg, #4facfe 0%, #00ffcc 100%);
+      --error: #ff6b6b;
+      --success: #00ffcc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 60px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      max-width: 700px;
+      margin-bottom: 40px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), #4facfe, #c471f5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      line-height: 1.7;
+    }
+
+    .hero .tagline {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 6px 16px;
+      background: rgba(0, 255, 204, 0.1);
+      border: 1px solid rgba(0, 255, 204, 0.2);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ── Container ── */
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 0.8s ease-out 0.2s backwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Input ── */
+    .input-group { display: flex; gap: 12px; margin-bottom: 32px; }
+
+    input#skills {
+      flex: 1;
+      padding: 16px 20px;
+      font-size: 1rem;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      color: white;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    input#skills:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    input#skills::placeholder { color: rgba(255,255,255,0.35); }
+
+    button#analyzeBtn {
+      padding: 16px 32px;
+      background: var(--accent);
+      color: #0f2027;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Outfit', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    button#analyzeBtn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+
+    button#analyzeBtn:active { transform: translateY(0); }
+
+    /* ── Results ── */
+    .result-card {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: transform 0.3s ease, background 0.3s ease;
+      animation: slideUp 0.5s ease-out backwards;
+    }
+
+    .result-card:hover {
+      transform: scale(1.015);
+      background: var(--card-hover);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .card-rank {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #4facfe, var(--accent));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: #0f2027;
+      margin-right: 14px;
+      flex-shrink: 0;
+    }
+
+    .card-left { display: flex; align-items: center; }
+
+    .role-title { font-size: 1.25rem; font-weight: 600; }
+
+    .match-percent { font-size: 1.3rem; font-weight: 800; color: var(--accent); }
+
+    .bar-container {
+      width: 100%;
+      height: 8px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 4px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      background: var(--bar-gradient);
+      border-radius: 4px;
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .gap-label { font-size: 0.9rem; color: var(--error); line-height: 1.5; }
+    .gap-label.no-gap { color: var(--success); }
+
+    .gap-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      margin: 3px 4px 3px 0;
+      background: rgba(255, 107, 107, 0.12);
+      border: 1px solid rgba(255, 107, 107, 0.25);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: #ff8a8a;
+    }
+
+    .message {
+      text-align: center;
+      font-size: 1.1rem;
+      padding: 20px;
+    }
+
+    .message.error { color: var(--error); }
+    .message.loading {
+      color: var(--accent);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    /* ── Stats Bar ── */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 12px;
+      margin-bottom: 8px;
+      animation: fadeIn 0.8s ease-out 0.4s backwards;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), #4facfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 48px;
+      text-align: center;
+      color: rgba(255,255,255,0.25);
+      font-size: 0.85rem;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2rem; }
+      .container { padding: 24px; }
+      .input-group { flex-direction: column; }
+      button#analyzeBtn { width: 100%; }
+      .stats { gap: 20px; }
+      .stat-number { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <h1>Skills Gap Analyzer</h1>
+    <p>Enter your current skills and instantly discover your best-matching career roles — plus exactly what you need to learn next.</p>
+    <span class="tagline">✨ 80+ career roles analyzed in real time</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-number" id="roleCount">0</div>
+      <div class="stat-label">Career Roles</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number" id="skillCount">0</div>
+      <div class="stat-label">Unique Skills</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number" id="sectorCount">0</div>
+      <div class="stat-label">Sectors</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="input-group">
+      <input id="skills" type="text" placeholder="e.g. Python, SQL, Excel, Communication" autocomplete="off" />
+      <button id="analyzeBtn" onclick="analyze()">Analyze</button>
+    </div>
+    <div id="results"></div>
+  </div>
+
+  <footer>
+    Built with conviction at the Hackathon &middot; <a href="https://github.com/jedidiahduku/SkillsGapAnalyzer" target="_blank">View on GitHub</a>
+  </footer>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  Full Jobs Dataset (80+ roles)
+// ══════════════════════════════════════════════════════════════
+const jobs = {
+  "Data Analyst":                  ["Python", "SQL", "Excel", "Tableau", "Statistics"],
+  "Software Engineer":             ["Java", "Python", "Git", "REST APIs", "Algorithms"],
+  "Machine Learning Engineer":     ["Python", "TensorFlow", "Statistics", "SQL", "Docker"],
+  "Product Manager":               ["Communication", "SQL", "Agile", "Roadmapping", "Excel"],
+  "Financial Analyst":             ["Excel", "Financial Modeling", "SQL", "Statistics", "PowerPoint"],
+  "UX Designer":                   ["Figma", "User Research", "Wireframing", "Prototyping", "CSS"],
+  "DevOps Engineer":               ["Docker", "Kubernetes", "CI/CD", "Linux", "Git"],
+  "Cybersecurity Analyst":         ["Networking", "Linux", "Python", "Risk Assessment", "SIEM"],
+  "Business Analyst":              ["SQL", "Excel", "Communication", "Requirements Gathering", "PowerPoint"],
+  "Web Developer":                 ["HTML", "CSS", "JavaScript", "React", "Git"],
+  "Database Administrator":        ["SQL", "Oracle", "Backup & Recovery", "Performance Tuning", "Linux"],
+  "Network Engineer":              ["Networking", "Cisco", "Routing", "Firewalls", "Linux"],
+  "Cloud Engineer":                ["AWS", "Docker", "Terraform", "Linux", "Python"],
+  "Digital Marketer":              ["SEO", "Google Analytics", "Content Writing", "Social Media", "Excel"],
+  "Project Manager":               ["Agile", "MS Project", "Communication", "Risk Management", "Excel"],
+  "Data Engineer":                 ["Python", "SQL", "Spark", "Airflow", "Docker"],
+  "AI Researcher":                 ["Python", "Mathematics", "PyTorch", "Statistics", "Research Writing"],
+  "Accountant":                    ["Excel", "QuickBooks", "Financial Reporting", "Tax", "Auditing"],
+  "HR Specialist":                 ["Communication", "Excel", "Recruitment", "Labour Law", "HRIS"],
+  "Content Writer":                ["Research Writing", "SEO", "Communication", "WordPress", "Social Media"],
+  "Registered Nurse":              ["Patient Care", "Clinical Assessment", "Medication Administration", "Medical Records", "Communication"],
+  "Pharmacist":                    ["Pharmacology", "Drug Dispensing", "Patient Counseling", "Medication Management", "Chemistry"],
+  "Medical Laboratory Scientist":  ["Lab Techniques", "Microscopy", "Quality Control", "Data Analysis", "Biology"],
+  "Physiotherapist":               ["Exercise Therapy", "Patient Assessment", "Anatomy", "Rehabilitation", "Communication"],
+  "Public Health Officer":         ["Epidemiology", "Community Outreach", "Data Analysis", "Health Policy", "Communication"],
+  "Nutritionist":                  ["Dietary Assessment", "Meal Planning", "Biology", "Communication", "Research Writing"],
+  "Radiographer":                  ["Imaging Equipment", "Anatomy", "Patient Care", "Radiation Safety", "Medical Records"],
+  "Teacher":                       ["Lesson Planning", "Classroom Management", "Communication", "Subject Knowledge", "Assessment"],
+  "Curriculum Developer":          ["Instructional Design", "Research Writing", "Education Technology", "Communication", "Assessment"],
+  "Educational Counselor":         ["Counseling", "Communication", "Psychology", "Career Guidance", "Report Writing"],
+  "Instructional Designer":        ["eLearning Tools", "Curriculum Design", "Communication", "Adobe Creative Suite", "LMS"],
+  "School Administrator":          ["Administration", "Budgeting", "Communication", "Leadership", "Scheduling"],
+  "Librarian":                     ["Information Management", "Research", "Cataloguing", "Communication", "Database Management"],
+  "Lawyer":                        ["Legal Research", "Drafting", "Negotiation", "Communication", "Critical Thinking"],
+  "Paralegal":                     ["Legal Research", "Document Preparation", "Communication", "Filing", "Microsoft Office"],
+  "Compliance Officer":            ["Risk Assessment", "Regulatory Knowledge", "Auditing", "Communication", "Report Writing"],
+  "Legal Researcher":              ["Legal Research", "Writing", "Critical Thinking", "Database Research", "Communication"],
+  "Civil Engineer":                ["AutoCAD", "Structural Analysis", "Project Management", "Mathematics", "Site Supervision"],
+  "Mechanical Engineer":           ["CAD", "Thermodynamics", "Materials Science", "Mathematics", "Problem Solving"],
+  "Electrical Engineer":           ["Circuit Design", "AutoCAD", "MATLAB", "Power Systems", "Problem Solving"],
+  "Chemical Engineer":             ["Process Design", "Thermodynamics", "Chemistry", "MATLAB", "Safety Management"],
+  "Environmental Engineer":        ["Environmental Assessment", "GIS", "Report Writing", "Chemistry", "Project Management"],
+  "Structural Engineer":           ["AutoCAD", "Structural Analysis", "Mathematics", "Project Management", "Revit"],
+  "Investment Banker":             ["Financial Modeling", "Valuation", "Excel", "Bloomberg", "Communication"],
+  "Insurance Underwriter":         ["Risk Assessment", "Statistics", "Excel", "Communication", "Analytical Thinking"],
+  "Supply Chain Manager":          ["Logistics", "Excel", "ERP Systems", "Negotiation", "Communication"],
+  "Procurement Officer":           ["Negotiation", "Vendor Management", "Excel", "Contract Management", "Communication"],
+  "Auditor":                       ["Auditing", "Excel", "Financial Reporting", "Communication", "Analytical Thinking"],
+  "Economist":                     ["Statistics", "Economic Modeling", "Research Writing", "Excel", "Policy Analysis"],
+  "Graphic Designer":              ["Adobe Photoshop", "Illustrator", "Typography", "Branding", "Creativity"],
+  "Photographer":                  ["Photography", "Lightroom", "Composition", "Photoshop", "Client Management"],
+  "Journalist":                    ["Writing", "Research", "Interviewing", "Communication", "News Editing"],
+  "Video Editor":                  ["Premiere Pro", "After Effects", "Storytelling", "Color Grading", "Audio Editing"],
+  "Social Media Manager":          ["Content Creation", "Analytics", "Copywriting", "Community Management", "Strategy"],
+  "Brand Strategist":              ["Marketing", "Communication", "Research", "Brand Development", "Creativity"],
+  "Animator":                      ["After Effects", "3D Modeling", "Storyboarding", "Creativity", "Maya"],
+  "Game Designer":                 ["Unity", "Game Mechanics", "Storytelling", "C#", "Level Design"],
+  "Podcast Producer":              ["Audio Editing", "Audacity", "Storytelling", "Communication", "Content Strategy"],
+  "Hotel Manager":                 ["Hospitality Management", "Communication", "Budgeting", "Leadership", "Customer Service"],
+  "Event Planner":                 ["Event Coordination", "Budgeting", "Communication", "Vendor Management", "Logistics"],
+  "Chef":                          ["Culinary Arts", "Food Safety", "Menu Planning", "Kitchen Management", "Creativity"],
+  "Customer Service Manager":      ["Communication", "CRM", "Problem Solving", "Leadership", "Reporting"],
+  "Tour Guide":                    ["Communication", "Local Knowledge", "Customer Service", "Languages", "First Aid"],
+  "Agricultural Officer":          ["Agronomy", "Soil Science", "Extension Services", "Report Writing", "Data Analysis"],
+  "Environmental Consultant":      ["Environmental Assessment", "GIS", "Report Writing", "Legislation", "Communication"],
+  "Food Scientist":                ["Food Technology", "Laboratory Skills", "Quality Control", "Chemistry", "Report Writing"],
+  "Veterinarian":                  ["Animal Medicine", "Surgery", "Diagnosis", "Laboratory Skills", "Communication"],
+  "Social Worker":                 ["Case Management", "Communication", "Report Writing", "Counseling", "Community Development"],
+  "Psychologist":                  ["Psychology", "Assessment", "Counseling", "Research Writing", "Communication"],
+  "Community Development Officer": ["Community Outreach", "Project Management", "Communication", "Report Writing", "Fundraising"],
+  "Policy Analyst":                ["Research Writing", "Data Analysis", "Policy Development", "Communication", "Economics"],
+  "NGO Program Officer":           ["Project Management", "Report Writing", "Fundraising", "Communication", "Monitoring & Evaluation"],
+  "Development Economist":         ["Economics", "Data Analysis", "Research Writing", "Statistics", "Policy Analysis"],
+  "Electrician":                   ["Electrical Wiring", "Safety Compliance", "Circuit Testing", "Blueprint Reading", "Problem Solving"],
+  "Plumber":                       ["Pipe Installation", "Blueprint Reading", "Safety Compliance", "Problem Solving", "Customer Service"],
+  "Welder":                        ["Welding Techniques", "Blueprint Reading", "Safety Compliance", "Metalworking", "Quality Control"],
+  "Carpenter":                     ["Woodworking", "Blueprint Reading", "Safety Compliance", "Measuring", "Problem Solving"],
+  "Automotive Technician":         ["Vehicle Diagnosis", "Engine Repair", "Electrical Systems", "Safety Compliance", "Customer Service"],
+  "Research Scientist":            ["Research Writing", "Laboratory Skills", "Statistics", "Data Analysis", "Critical Thinking"],
+  "Chemist":                       ["Chemistry", "Laboratory Skills", "Data Analysis", "Report Writing", "Safety Management"],
+  "Microbiologist":                ["Microbiology", "Laboratory Skills", "Data Analysis", "Report Writing", "Research Writing"],
+  "Geologist":                     ["GIS", "Field Mapping", "Data Analysis", "Report Writing", "Geology"],
+  "Laboratory Technician":         ["Laboratory Skills", "Quality Control", "Data Recording", "Safety Compliance", "Microscopy"],
+  "Real Estate Agent":             ["Negotiation", "Communication", "Market Analysis", "CRM", "Marketing"],
+  "Quantity Surveyor":             ["Cost Estimation", "AutoCAD", "Excel", "Contract Management", "Mathematics"],
+  "Architect":                     ["AutoCAD", "Revit", "Design", "Project Management", "Communication"],
+  "Interior Designer":             ["Design", "AutoCAD", "Client Management", "Creativity", "Space Planning"],
+  "Logistics Coordinator":         ["Supply Chain", "Excel", "Communication", "ERP Systems", "Problem Solving"],
+  "Customs Officer":               ["Regulatory Knowledge", "Communication", "Report Writing", "Analytical Thinking", "Excel"],
+  "Port Operations Officer":       ["Logistics", "Safety Compliance", "Communication", "Excel", "Operations Management"],
+  "Freight Forwarder":             ["Logistics", "Communication", "Documentation", "Negotiation", "Excel"],
+  "Public Relations Specialist":   ["Communication", "Media Relations", "Writing", "Event Management", "Crisis Management"],
+  "Technical Writer":              ["Technical Writing", "Communication", "Microsoft Office", "Research", "Editing"],
+  "Translator":                    ["Languages", "Communication", "Writing", "Cultural Knowledge", "Attention to Detail"],
+  "Communications Manager":        ["Communication", "Strategy", "Writing", "Media Relations", "Leadership"],
+  "Copywriter":                    ["Writing", "Creativity", "SEO", "Communication", "Research"],
+  "Fashion Designer":              ["Fashion Design", "Sewing", "Adobe Illustrator", "Trend Analysis", "Creativity"],
+  "Sports Coach":                  ["Athletic Training", "Communication", "Leadership", "Motivation", "Sports Knowledge"],
+  "Entrepreneur":                  ["Business Development", "Leadership", "Finance", "Marketing", "Communication"],
+  "Renewable Energy Technician":   ["Solar Installation", "Electrical Wiring", "Safety Compliance", "Mathematics", "Troubleshooting"]
+};
+
+// ══════════════════════════════════════════════════════════════
+//  Stats Counter Animation
+// ══════════════════════════════════════════════════════════════
+function animateCount(el, target, duration = 1200) {
+  let start = 0;
+  const step = (ts) => {
+    if (!start) start = ts;
+    const progress = Math.min((ts - start) / duration, 1);
+    el.textContent = Math.floor(progress * target);
+    if (progress < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+const allSkills = new Set();
+Object.values(jobs).forEach(s => s.forEach(sk => allSkills.add(sk)));
+
+window.addEventListener('DOMContentLoaded', () => {
+  animateCount(document.getElementById('roleCount'), Object.keys(jobs).length);
+  animateCount(document.getElementById('skillCount'), allSkills.size);
+  animateCount(document.getElementById('sectorCount'), 15);
+});
+
+// ══════════════════════════════════════════════════════════════
+//  Analysis Engine (runs 100% in the browser)
+// ══════════════════════════════════════════════════════════════
+function analyze() {
+  const raw = document.getElementById('skills').value;
+  const resultsDiv = document.getElementById('results');
+
+  if (!raw.trim()) {
+    resultsDiv.innerHTML = '<p class="message error">Please enter at least one skill to get started.</p>';
+    return;
+  }
+
+  const userSkills = new Set(
+    raw.split(',').map(s => s.trim()).filter(Boolean)
+  );
+
+  resultsDiv.innerHTML = '<p class="message loading">Analyzing against ' + Object.keys(jobs).length + ' career roles…</p>';
+
+  // Small delay for the loading animation to feel intentional
+  setTimeout(() => {
+    const results = [];
+
+    for (const [role, required] of Object.entries(jobs)) {
+      const requiredSet = new Set(required);
+      const matched = [...requiredSet].filter(s => userSkills.has(s));
+      const gap = [...requiredSet].filter(s => !userSkills.has(s));
+      const matchScore = Math.round((matched.length / requiredSet.size) * 100);
+
+      results.push({ role, match: matchScore, gap: gap.sort() });
+    }
+
+    results.sort((a, b) => b.match - a.match);
+    const top5 = results.slice(0, 5);
+
+    let html = '';
+    top5.forEach((item, index) => {
+      const gapHTML = item.gap.length
+        ? `<div class="gap-label">Missing: ${item.gap.map(g => `<span class="gap-tag">${g}</span>`).join('')}</div>`
+        : `<div class="gap-label no-gap">✓ You meet all core requirements!</div>`;
+
+      html += `
+      <div class="result-card" style="animation-delay: ${index * 0.1}s">
+        <div class="card-header">
+          <div class="card-left">
+            <div class="card-rank">${index + 1}</div>
+            <span class="role-title">${item.role}</span>
+          </div>
+          <span class="match-percent">${item.match}%</span>
+        </div>
+        <div class="bar-container">
+          <div class="bar" id="bar-${index}"></div>
+        </div>
+        ${gapHTML}
+      </div>`;
+    });
+
+    resultsDiv.innerHTML = html || '<p class="message">No matching roles found.</p>';
+
+    // Animate bars after DOM paint
+    requestAnimationFrame(() => {
+      top5.forEach((item, i) => {
+        const bar = document.getElementById('bar-' + i);
+        if (bar) bar.style.width = item.match + '%';
+      });
+    });
+  }, 400);
+}
+
+// Enter key support
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('skills').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') analyze();
+  });
+});
+</script>
+</body>
+</html>
