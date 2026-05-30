@@ -96,8 +96,10 @@
     /* ── Input ── */
     .input-group { display: flex; gap: 12px; margin-bottom: 16px; }
 
-    input#skills {
+    input#skills,
+    input#jobSearch {
       flex: 1;
+      width: 100%;
       padding: 16px 20px;
       font-size: 1rem;
       background: rgba(0, 0, 0, 0.25);
@@ -109,12 +111,14 @@
       font-family: 'Outfit', sans-serif;
     }
 
-    input#skills:focus {
+    input#skills:focus,
+    input#jobSearch:focus {
       border-color: var(--accent);
       box-shadow: 0 0 12px var(--accent-glow);
     }
 
-    input#skills::placeholder { color: rgba(255,255,255,0.35); }
+    input#skills::placeholder,
+    input#jobSearch::placeholder { color: rgba(255,255,255,0.35); }
 
     button#analyzeBtn {
       padding: 16px 32px;
