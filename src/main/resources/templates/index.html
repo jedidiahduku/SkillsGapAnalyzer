@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills Gap Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-main: #ffffff;
+      --text-muted: #b0c4de;
+      --accent: #00ffcc;
+      --accent-hover: #00e6b8;
+      --error: #ff4d4d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 60px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      background: -webkit-linear-gradient(45deg, var(--accent), #4facfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+    }
+
+    p.subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: white;
+      outline: none;
+      transition: all 0.3s ease;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    button {
+      padding: 16px 32px;
+      background: var(--accent);
+      color: #0f2027;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Outfit', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 255, 204, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      transition: transform 0.3s ease, background 0.3s ease;
+      animation: slideUp 0.5s ease-out backwards;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .role-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: white;
+    }
+
+    .match-percent {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .bar-container {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      background: linear-gradient(90deg, #4facfe 0%, var(--accent) 100%);
+      border-radius: 4px;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .gap {
+      color: var(--error);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .gap::before {
+      content: '•';
+    }
+
+    .no-gap {
+      color: var(--accent);
+    }
+
+    .loading {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--accent);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.5; }
+      50% { opacity: 1; }
+      100% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Skills Gap Analyzer</h1>
+    <p class="subtitle">Enter your current skills to discover your best-matching roles and identify exactly what you need to learn next.</p>
+    
+    <div class="input-group">
+      <input id="skills" type="text" placeholder="e.g. Python, SQL, Excel, Communication" autocomplete="off" />
+      <button onclick="analyze()">Analyze My Skills</button>
+    </div>
+    
+    <div id="results"></div>
+  </div>
+
+  <script>
+  async function analyze() {
+    const raw = document.getElementById('skills').value;
+    if (!raw.trim()) {
+      document.getElementById('results').innerHTML = '<p style="color:var(--error);text-align:center;">Please enter some skills first.</p>';
+      return;
+    }
+
+    const skills = raw.split(',').map(s => s.trim()).filter(Boolean);
+    document.getElementById('results').innerHTML = '<p class="loading">Analyzing market data...</p>';
+
+    try {
+      const res = await fetch('http://localhost:5001/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ skills })
+      });
+      
+      if (!res.ok) throw new Error('Network response was not ok');
+      const data = await res.json();
+
+      let html = '';
+      data.forEach((item, index) => {
+        const gapText = item.gap.length ? `Missing: ${item.gap.join(', ')}` : 'Ready — You meet all core requirements!';
+        const gapClass = item.gap.length ? 'gap' : 'gap no-gap';
+        
+        html += `
+        <div class="card" style="animation-delay: ${index * 0.1}s">
+          <div class="card-header">
+            <span class="role-title">${item.role}</span>
+            <span class="match-percent">${item.match}%</span>
+          </div>
+          <div class="bar-container">
+            <div class="bar" style="width: ${item.match}%"></div>
+          </div>
+          <div class="${gapClass}">${gapText}</div>
+        </div>`;
+      });
+      document.getElementById('results').innerHTML = html || '<p style="text-align:center;">No matching roles found.</p>';
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      document.getElementById('results').innerHTML = '<p style="color:var(--error);text-align:center;">Failed to connect to the analysis engine. Ensure the Python API is running.</p>';
+    }
+  }
+
+  // Allow pressing Enter to submit
+  document.getElementById('skills').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') analyze();
+  });
+  </script>
+</body>
+</html>
