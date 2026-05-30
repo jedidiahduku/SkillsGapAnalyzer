@@ -7,6 +7,16 @@
   <title>Skills Gap Analyzer</title>
   <link rel="icon" href="favicon.png" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+  <script>
+    // Apply saved/preferred theme before paint to avoid a flash of the wrong theme
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+      } catch (e) {}
+    })();
+  </script>
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
@@ -15,6 +25,7 @@
       --card-hover: rgba(255, 255, 255, 0.08);
       --text-main: #ffffff;
       --text-muted: #b0c4de;
+      --text-faint: rgba(255, 255, 255, 0.25);
       --accent: #00ffcc;
       --accent-hover: #00e6b8;
       --accent-glow: rgba(0, 255, 204, 0.2);
@@ -22,19 +33,79 @@
       --error: #ff6b6b;
       --success: #00ffcc;
       --warn: #ffd166;
+      --input-bg: rgba(0, 0, 0, 0.25);
+      --input-text: #ffffff;
+      --btn-text: #0f2027;
+      --dropdown-bg: #16323b;
+      --track-bg: rgba(255, 255, 255, 0.08);
     }
+
+    :root[data-theme="light"] {
+      --bg-gradient: linear-gradient(135deg, #eef3f8, #dbe7f3, #cfe3e0);
+      --card-bg: rgba(255, 255, 255, 0.72);
+      --card-border: rgba(15, 32, 39, 0.12);
+      --card-hover: rgba(255, 255, 255, 0.92);
+      --text-main: #0f2027;
+      --text-muted: #51707c;
+      --text-faint: rgba(15, 32, 39, 0.4);
+      --accent: #048c7f;
+      --accent-hover: #03756a;
+      --accent-glow: rgba(4, 140, 127, 0.22);
+      --bar-gradient: linear-gradient(90deg, #2b8cf0 0%, #048c7f 100%);
+      --error: #d62839;
+      --success: #048c7f;
+      --warn: #b9770a;
+      --input-bg: rgba(15, 32, 39, 0.05);
+      --input-text: #0f2027;
+      --btn-text: #ffffff;
+      --dropdown-bg: #ffffff;
+      --track-bg: rgba(15, 32, 39, 0.1);
+    }
+
+    /* ── Theme toggle ── */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 50;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: var(--text-main);
+      font-size: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-2px) rotate(-12deg);
+      border-color: var(--accent);
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+
+    .theme-toggle:active { transform: translateY(0) rotate(0); }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Outfit', sans-serif;
       background: var(--bg-gradient);
+      background-attachment: fixed;
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 40px 20px 60px;
+      transition: color 0.4s ease;
     }
 
     /* ── Hero ── */
@@ -102,10 +173,10 @@
       width: 100%;
       padding: 16px 20px;
       font-size: 1rem;
-      background: rgba(0, 0, 0, 0.25);
+      background: var(--input-bg);
       border: 1px solid var(--card-border);
       border-radius: 14px;
-      color: white;
+      color: var(--input-text);
       outline: none;
       transition: border-color 0.3s, box-shadow 0.3s;
       font-family: 'Outfit', sans-serif;
@@ -118,12 +189,12 @@
     }
 
     input#skills::placeholder,
-    input#jobSearch::placeholder { color: rgba(255,255,255,0.35); }
+    input#jobSearch::placeholder { color: var(--text-muted); opacity: 0.6; }
 
     button#analyzeBtn {
       padding: 16px 32px;
       background: var(--accent);
-      color: #0f2027;
+      color: var(--btn-text);
       border: none;
       border-radius: 14px;
       font-size: 1rem;
@@ -305,7 +376,7 @@
     .bar-container {
       width: 100%;
       height: 8px;
-      background: rgba(255,255,255,0.08);
+      background: var(--track-bg);
       border-radius: 4px;
       margin-bottom: 14px;
       overflow: hidden;
@@ -497,7 +568,7 @@
 
     .footer-bottom {
       font-size: 0.8rem;
-      color: rgba(255,255,255,0.25);
+      color: var(--text-faint);
     }
 
     .footer-bottom a {
@@ -534,7 +605,7 @@
 
     .tab.active {
       background: var(--accent);
-      color: #0f2027;
+      color: var(--btn-text);
       box-shadow: 0 4px 14px var(--accent-glow);
     }
 
@@ -550,7 +621,7 @@
       left: 0;
       right: 0;
       z-index: 20;
-      background: #16323b;
+      background: var(--dropdown-bg);
       border: 1px solid var(--card-border);
       border-radius: 12px;
       overflow: hidden;
@@ -693,7 +764,7 @@
 
     .detail-btn.primary {
       background: var(--accent);
-      color: #0f2027;
+      color: var(--btn-text);
       border-color: transparent;
     }
     .detail-btn:hover { transform: translateY(-1px); border-color: var(--accent); }
@@ -727,6 +798,8 @@
   </style>
 </head>
 <body>
+
+  <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" title="Toggle light/dark mode">🌙</button>
 
   <div class="hero">
     <h1>Skills Gap Analyzer</h1>
@@ -1042,7 +1115,29 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   initExplore();
+  updateThemeIcon();
 });
+
+// ══════════════════════════════════════════════════════════════
+//  Light / Dark theme toggle
+// ══════════════════════════════════════════════════════════════
+function updateThemeIcon() {
+  const btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  // Show the icon for the mode you'd switch TO
+  btn.textContent = isLight ? '🌙' : '☀️';
+  btn.title = isLight ? 'Switch to dark mode' : 'Switch to light mode';
+}
+
+function toggleTheme() {
+  const root = document.documentElement;
+  const isLight = root.getAttribute('data-theme') === 'light';
+  if (isLight) root.removeAttribute('data-theme');
+  else root.setAttribute('data-theme', 'light');
+  try { localStorage.setItem('theme', isLight ? 'dark' : 'light'); } catch (e) {}
+  updateThemeIcon();
+}
 
 // ══════════════════════════════════════════════════════════════
 //  Stats Counter Animation
