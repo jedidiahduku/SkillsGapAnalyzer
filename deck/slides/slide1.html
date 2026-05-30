@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --accent:#00ffcc; --blue:#4facfe; --purple:#c471f5;
+    --warn:#ffd166; --error:#ff8a8a; --muted:#b0c4de; --faint:rgba(176,196,222,.55);
+    --card:rgba(255,255,255,.05); --border:rgba(255,255,255,.1);
+  }
+  html,body{width:1280px;height:720px}
+  .stage{
+    position:relative;width:1280px;height:720px;overflow:hidden;
+    font-family:'Outfit',sans-serif;color:#fff;
+    background:
+      radial-gradient(900px 500px at 12% -8%, rgba(79,172,254,.20), transparent 60%),
+      radial-gradient(820px 520px at 102% 6%, rgba(196,113,245,.16), transparent 55%),
+      linear-gradient(155deg,#0f2027,#193642 55%,#21505f);
+    padding:64px 72px;
+  }
+  .kicker{display:inline-flex;align-self:flex-start;align-items:center;gap:8px;font-size:15px;font-weight:600;
+    letter-spacing:2px;text-transform:uppercase;color:var(--accent);
+    background:rgba(0,255,204,.1);border:1px solid rgba(0,255,204,.22);
+    padding:7px 16px;border-radius:20px}
+  .secnum{font-size:15px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--faint)}
+  h1{font-size:40px;font-weight:800;line-height:1.08;letter-spacing:-.5px;margin-top:14px}
+  .grad{background:linear-gradient(120deg,var(--accent),var(--blue),var(--purple));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .muted{color:var(--muted)}
+  .footer{position:absolute;left:72px;bottom:34px;font-size:14px;color:var(--faint)}
+  .pageno{position:absolute;right:72px;bottom:34px;font-size:14px;color:var(--faint)}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:18px}
+  .row{display:flex}
+</style></head><body><div class="stage">
+  <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 72px">
+    <span class="kicker">⚡ Track 3 · Economic Empowerment &amp; Education</span>
+    <h1 style="font-size:74px;margin-top:26px">Skills Gap <span class="grad">Analyzer</span></h1>
+    <p class="muted" style="font-size:24px;line-height:1.5;max-width:880px;margin-top:20px">
+      Turn career guesswork into data. Match the skills you <b style="color:#fff">have</b> to your best-fit roles —
+      or search a job you <b style="color:#fff">want</b> and see exactly which skills it needs.</p>
+    <div style="display:flex;gap:10px;margin-top:34px">
+      <span class="card" style="padding:9px 18px;font-size:16px">🎯 Analyze my skills</span>
+      <span class="card" style="padding:9px 18px;font-size:16px">🔍 Explore a job</span>
+      <span class="card" style="padding:9px 18px;font-size:16px">📚 Free course for every gap</span>
+    </div>
+  </div>
+  <div class="footer"><b style="color:#fff">The Avengers</b> &nbsp;·&nbsp; Prince Sugar · Chrysler Steve · Jedidiah Duku</div>
+</div></body></html>

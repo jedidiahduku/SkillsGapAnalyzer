@@ -37,3 +37,7 @@ build/
 
 ### Office temp/lock files ###
 ~$*
+
+### Node / deck build artifacts ###
+node_modules/
+deck/slides/*.png

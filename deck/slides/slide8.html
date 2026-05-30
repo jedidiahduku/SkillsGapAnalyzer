@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --accent:#00ffcc; --blue:#4facfe; --purple:#c471f5;
+    --warn:#ffd166; --error:#ff8a8a; --muted:#b0c4de; --faint:rgba(176,196,222,.55);
+    --card:rgba(255,255,255,.05); --border:rgba(255,255,255,.1);
+  }
+  html,body{width:1280px;height:720px}
+  .stage{
+    position:relative;width:1280px;height:720px;overflow:hidden;
+    font-family:'Outfit',sans-serif;color:#fff;
+    background:
+      radial-gradient(900px 500px at 12% -8%, rgba(79,172,254,.20), transparent 60%),
+      radial-gradient(820px 520px at 102% 6%, rgba(196,113,245,.16), transparent 55%),
+      linear-gradient(155deg,#0f2027,#193642 55%,#21505f);
+    padding:64px 72px;
+  }
+  .kicker{display:inline-flex;align-self:flex-start;align-items:center;gap:8px;font-size:15px;font-weight:600;
+    letter-spacing:2px;text-transform:uppercase;color:var(--accent);
+    background:rgba(0,255,204,.1);border:1px solid rgba(0,255,204,.22);
+    padding:7px 16px;border-radius:20px}
+  .secnum{font-size:15px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--faint)}
+  h1{font-size:40px;font-weight:800;line-height:1.08;letter-spacing:-.5px;margin-top:14px}
+  .grad{background:linear-gradient(120deg,var(--accent),var(--blue),var(--purple));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .muted{color:var(--muted)}
+  .footer{position:absolute;left:72px;bottom:34px;font-size:14px;color:var(--faint)}
+  .pageno{position:absolute;right:72px;bottom:34px;font-size:14px;color:var(--faint)}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:18px}
+  .row{display:flex}
+</style></head><body><div class="stage">
+  <span class="secnum">07 · Impact &amp; What's Next</span>
+  <h1>Free, instant, and built to <span class="grad">scale &amp; deepen</span></h1>
+  <div class="row" style="gap:20px;margin-top:34px;align-items:stretch">
+    <div class="card" style="flex:1;padding:30px">
+      <div style="font-size:19px;font-weight:700;margin-bottom:14px">📈 Impact</div>
+      <div class="row" style="gap:10px;margin-bottom:10px"><span style="color:var(--accent)">▸</span><span class="muted" style="font-size:16px;line-height:1.45">Works for anyone with a browser — zero cost, zero install</span></div><div class="row" style="gap:10px;margin-bottom:10px"><span style="color:var(--accent)">▸</span><span class="muted" style="font-size:16px;line-height:1.45">One shared skills map across 100 roles &amp; 15 sectors</span></div><div class="row" style="gap:10px;margin-bottom:10px"><span style="color:var(--accent)">▸</span><span class="muted" style="font-size:16px;line-height:1.45">Turns "I don't know where to start" into a concrete next step</span></div>
+    </div>
+    <div class="card" style="flex:1;padding:30px;border-color:rgba(0,255,204,.25);background:rgba(0,255,204,.05)">
+      <div style="font-size:19px;font-weight:700;margin-bottom:14px">🚀 What's next</div>
+      <div class="row" style="gap:10px;margin-bottom:10px"><span style="color:var(--accent)">▸</span><span class="muted" style="font-size:16px;line-height:1.45"><b style="color:#fff">Claude-powered</b> personalized learning plans &amp; career Q&amp;A</span></div><div class="row" style="gap:10px;margin-bottom:10px"><span style="color:var(--accent)">▸</span><span class="muted" style="font-size:16px;line-height:1.45">Localization &amp; full offline build for low-connectivity use</span></div><div class="row" style="gap:10px;margin-bottom:10px"><span style="color:var(--accent)">▸</span><span class="muted" style="font-size:16px;line-height:1.45">Real-time labour-market data to keep roles current</span></div>
+    </div>
+  </div>
+  <div style="margin-top:26px;font-size:20px;line-height:1.4"><span class="grad" style="font-weight:700">The Avengers</span> <span class="muted">·&nbsp; Prince Sugar · Chrysler Steve · Jedidiah Duku &nbsp;·&nbsp; try it live: jedidiahduku.github.io/SkillsGapAnalyzer</span></div>
+  <div class="pageno">8</div>
+</div></body></html>

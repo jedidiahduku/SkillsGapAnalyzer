@@ -62,10 +62,13 @@ The same logic is also available as an optional **Flask API** (see below) for pr
 
 ```
 SkillsGapAnalyzer/
-├── index.html          # The app — self-contained static site (HTML/CSS/JS). Deployed to GitHub Pages.
-├── jobs_dataset.json   # 100 roles → required skills
-├── app.py              # Optional Flask API mirroring the matching logic
-├── pom.xml / src/      # Spring Boot scaffold (experimental, not required to run the app)
+├── index.html                      # The app — self-contained static site (HTML/CSS/JS). Deployed to GitHub Pages.
+├── jobs_dataset.json               # 100 roles → required skills
+├── app.py                          # Optional Flask API mirroring the matching logic
+├── infographic.html / .png         # One-page project infographic (poster + rendered image)
+├── SkillsGapAnalyzer_Pitch.pptx    # 8-slide pitch deck (16:9)
+├── deck/                           # Editable deck source (HTML slides + generator scripts)
+├── pom.xml / src/                  # Spring Boot scaffold (experimental, not required to run the app)
 └── README.md
 ```
 
