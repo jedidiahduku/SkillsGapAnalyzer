@@ -216,7 +216,86 @@
       border-radius: 8px;
       font-size: 0.82rem;
       color: #ff8a8a;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
     }
+
+    .gap-tag:hover {
+      background: rgba(255, 107, 107, 0.25);
+      border-color: rgba(255, 107, 107, 0.5);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
+    }
+
+    .gap-tag::after {
+      content: ' ↗';
+      font-size: 0.7rem;
+      opacity: 0.6;
+    }
+
+    /* ── Learn Links ── */
+    .learn-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .learn-links span.learn-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      align-self: center;
+      margin-right: 4px;
+    }
+
+    .learn-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 14px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .learn-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    }
+
+    .learn-btn.coursera {
+      background: rgba(0, 86, 210, 0.2);
+      border: 1px solid rgba(0, 86, 210, 0.35);
+      color: #6eaaff;
+    }
+    .learn-btn.coursera:hover { background: rgba(0, 86, 210, 0.35); }
+
+    .learn-btn.youtube {
+      background: rgba(255, 0, 0, 0.12);
+      border: 1px solid rgba(255, 0, 0, 0.25);
+      color: #ff6b6b;
+    }
+    .learn-btn.youtube:hover { background: rgba(255, 0, 0, 0.25); }
+
+    .learn-btn.udemy {
+      background: rgba(164, 53, 240, 0.12);
+      border: 1px solid rgba(164, 53, 240, 0.25);
+      color: #c98bff;
+    }
+    .learn-btn.udemy:hover { background: rgba(164, 53, 240, 0.25); }
+
+    .learn-btn.google {
+      background: rgba(0, 255, 204, 0.08);
+      border: 1px solid rgba(0, 255, 204, 0.2);
+      color: var(--accent);
+    }
+    .learn-btn.google:hover { background: rgba(0, 255, 204, 0.2); }
 
     .message {
       text-align: center;
@@ -490,9 +569,27 @@ function analyze() {
 
     let html = '';
     top5.forEach((item, index) => {
-      const gapHTML = item.gap.length
-        ? `<div class="gap-label">Missing: ${item.gap.map(g => `<span class="gap-tag">${g}</span>`).join('')}</div>`
+      const gapSkillsHTML = item.gap.length
+        ? `<div class="gap-label">Missing: ${item.gap.map(g => {
+            const q = encodeURIComponent(g + ' course');
+            return `<a class="gap-tag" href="https://www.coursera.org/search?query=${q}" target="_blank" rel="noopener" title="Find ${g} courses on Coursera">${g}</a>`;
+          }).join('')}</div>`
         : `<div class="gap-label no-gap">✓ You meet all core requirements!</div>`;
+
+      // Build learn links for missing skills
+      let learnHTML = '';
+      if (item.gap.length) {
+        const searchQuery = encodeURIComponent(item.gap.join(' ') + ' skills course');
+        const roleQuery = encodeURIComponent(item.role + ' skills');
+        learnHTML = `
+        <div class="learn-links">
+          <span class="learn-label">📚 Learn these:</span>
+          <a class="learn-btn coursera" href="https://www.coursera.org/search?query=${roleQuery}" target="_blank" rel="noopener">Coursera</a>
+          <a class="learn-btn youtube" href="https://www.youtube.com/results?search_query=${searchQuery}" target="_blank" rel="noopener">YouTube</a>
+          <a class="learn-btn udemy" href="https://www.udemy.com/courses/search/?q=${roleQuery}" target="_blank" rel="noopener">Udemy</a>
+          <a class="learn-btn google" href="https://www.google.com/search?q=free+${searchQuery}" target="_blank" rel="noopener">Google</a>
+        </div>`;
+      }
 
       html += `
       <div class="result-card" style="animation-delay: ${index * 0.1}s">
@@ -506,7 +603,8 @@ function analyze() {
         <div class="bar-container">
           <div class="bar" id="bar-${index}"></div>
         </div>
-        ${gapHTML}
+        ${gapSkillsHTML}
+        ${learnHTML}
       </div>`;
     });
 
