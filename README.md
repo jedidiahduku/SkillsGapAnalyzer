@@ -2,7 +2,7 @@
 
 > Two ways in: enter the skills you **have** to find your best-matching career roles — or search a job you **want** and see exactly which skills it needs. Every missing skill comes with a free course link.
 
-Built at a hackathon by **Team Innovators** under *Track 3: Economic Empowerment & Education*.
+Built at a hackathon by **The Avengers** under *Track 3: Economic Empowerment & Education*.
 
 **🔗 Live demo:** https://jedidiahduku.github.io/SkillsGapAnalyzer/
 
@@ -113,6 +113,6 @@ Designed for the lowest possible barrier to entry:
 
 ---
 
-## Team Innovators
+## The Avengers
 
 Prince Sugar · Chrysler Steve · Jedidiah Duku
